@@ -52,8 +52,10 @@ public:
     // }
 };
 class Bank{
-    public :
+    protected :
     int balance =10000;
+
+    public :
 
     void deposite (int amount){
         this -> balance +=  amount ;// because ballence kabhi eqaul nahi hoti hai balance add hoti hai.
@@ -73,18 +75,29 @@ class Bank{
     }
     
 };
+
+class Account :public Bank{
+    public :
+    void cuttax (){
+        this -> balance -=200 ;
+    }
+};
 int main()
 {
 
     // A a1;
     // B b1 ;
     // b1.print();
-    Bank rbi ;
-    rbi.deposite(4000);
-    rbi.deposite(14000);
-    rbi.withdraw(2000);
-    rbi.checkbalance();
-    rbi.balance = 0 ;
-    rbi.checkbalance();
+    // Bank rbi ;
+    // rbi.deposite(4000);
+    // rbi.deposite(14000);
+    // rbi.withdraw(2000);
+    // rbi.checkbalance();
+    // // rbi.balance = 0 ;
+    // rbi.checkbalance();
+    Account a1 ;
+    a1.checkbalance(); 
+    a1.cuttax();
+    a1.checkbalance();
     return 0;
 }
