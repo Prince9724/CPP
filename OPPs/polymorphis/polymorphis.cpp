@@ -4,7 +4,8 @@
 using namespace std;
 class A
 {
-
+//method overloading =>  ek class me ek bame ke do function bna skte hai ( you can create same name function in same class but 
+// you have to sparate in class by parameter count )
 public:
     void print()
     {
