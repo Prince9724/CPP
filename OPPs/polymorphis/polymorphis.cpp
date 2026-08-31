@@ -116,3 +116,22 @@ int main()
 
 // 2. method overriding  ==> we can create same name methode in parrante child relation but if you call method from child class then parrant method will be override. (agar parant se parrrant ke method ko call krenge to output aa jayega  but child se parent ke methode ko call krenge to parrant mrthode override hoga. aur child ka output aa jaayega. ) 
  
+
+
+// 4. data Abstraction -> is process of hiding essentional/ secure / important information from the users and display only necessary data . 
+// we decide how system will work and will be used 
+// we can secire data by make attributes private, 
+// make attributes/ data secure from diresct access of the user 
+// bina user ke direct koi data access kr pana chahiye nahi 
+
+// 1. proper user of access modifier (public , private , protected )
+//  ** virtual function data ===> we can create virtual function by using virtual keyword. 
+//  parant / flow / formate  -> child ko parant ka flow krna hi pdega agr nhi krega to code aage nhi badhega 
+// 	isme fucion ka hed parant class ke ander bnana hai aur body child ke ander bnana hai bina body bnaye code run nhi hoga error aayegi .
+
+
+// ** pure virtual function ===> virtual function ka use krna hai aur 0 bhi declare krna hai 
+
+
+// ..ATM
+// debit - > pin -> atm 
