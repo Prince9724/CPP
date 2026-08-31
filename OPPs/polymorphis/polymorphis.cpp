@@ -102,3 +102,17 @@ int main()
     a1.checkbalance();
     return 0;
 }
+
+
+// polymorphis means to  handle multiple process by same name. 
+// when we want to create same name  fuction with different functionalty
+// jab hmme ekhi name ka alag alag functionality create krna ho tab polymorphism recreate hota hai.
+
+
+// ise do method hote hai 
+// 1. method overloading ==> ek class me ek name ke do function bna skte ho (you can create same name fuction in same class but you have to saprate in class by parameter count   )
+	
+// same function agar parameter pass kro to alag function de rha hai aur parameter na pass kro to alag function de rha hai.  
+
+// 2. method overriding  ==> we can create same name methode in parrante child relation but if you call method from child class then parrant method will be override. (agar parant se parrrant ke method ko call krenge to output aa jayega  but child se parent ke methode ko call krenge to parrant mrthode override hoga. aur child ka output aa jaayega. ) 
+ 
