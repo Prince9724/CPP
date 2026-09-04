@@ -42,8 +42,8 @@ public:
         cout << "std : " << this->std << endl;
         cout << "age : " << this->age << endl;
     }
-    ~Student(){
-        cout << " destructor is calling !! " << endl ;
+    ~Student(){// destuctor sabse last me call hota hai .
+        cout << " destructor is calling !! " << endl ;// jitni baar get function o call krenge ui baar last me ye call hota hai 
     };
 };
 
