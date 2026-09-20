@@ -26,6 +26,7 @@ public:
         int totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
 
         return totalSeconds;
+        
     }
 };
 
