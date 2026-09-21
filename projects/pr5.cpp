@@ -1,7 +1,10 @@
 #include <iostream>
+#include <string>
+#include <stdexcept>
+#include <limits>
 using namespace std;
 
-// Abstract Base Class
+const int MAX_ITEMS = 100;
 
 class LibraryItem
 {
@@ -11,642 +14,482 @@ private:
     string dueDate;
 
 public:
-    // Constructor
-    LibraryItem()
+    LibraryItem(string t, string a, string d = "Not Set")
     {
-        this->title = "";
-        this->author = "";
-        this->dueDate = "";
+        setTitle(t);
+        setAuthor(a);
+        setDueDate(d);
     }
 
-    LibraryItem(string title, string author)
+    virtual ~LibraryItem() {}
+
+    string getTitle() const
     {
-        this->title = title;
-        this->author = author;
-        this->dueDate = "";
+        return title;
     }
 
-    // Destructor
-    virtual ~LibraryItem()
+    string getAuthor() const
     {
+        return author;
     }
 
-    // Getters
-    string getTitle()
+    string getDueDate() const
     {
-        return this->title;
+        return dueDate;
     }
 
-    string getAuthor()
+    void setTitle(string newTitle)
     {
-        return this->author;
+        if (newTitle.empty())
+            throw invalid_argument("Title cannot be empty.");
+
+        title = newTitle;
     }
 
-    string getDueDate()
+    void setAuthor(string newAuthor)
     {
-        return this->dueDate;
+        if (newAuthor.empty())
+            throw invalid_argument("Author cannot be empty.");
+
+        author = newAuthor;
     }
 
-    // Setters
-    void setTitle(string title)
+    void setDueDate(string newDueDate)
     {
-        this->title = title;
+        dueDate = newDueDate;
     }
 
-    void setAuthor(string author)
-    {
-        this->author = author;
-    }
-
-    void setDueDate(string dueDate)
-    {
-        this->dueDate = dueDate;
-    }
-
-    // Pure Virtual Functions
     virtual void checkOut() = 0;
-
     virtual void returnItem() = 0;
-
-    virtual void displayDetails() = 0;
+    virtual void displayDetails() const = 0;
 };
-
-// Book
 
 class Book : public LibraryItem
 {
 private:
-    string ISBN;
-    int quantity;
-    bool checkedOut;
+    string isbn;
+    bool available;
 
 public:
-    // Constructor
-    Book(
-        string title,
-        string author,
-        string isbn,
-        int quantity)
-        : LibraryItem(title, author)
+    Book(string title, string author, string dueDate, string isbn)
+        : LibraryItem(title, author, dueDate)
     {
-        if (quantity < 0)
-        {
-            throw "Quantity cannot be negative!";
-        }
+        if (isbn.length() < 10)
+            throw invalid_argument("Invalid ISBN format.");
 
-        if (isbn.length() != 10 &&
-            isbn.length() != 13)
-        {
-            throw "Invalid ISBN!";
-        }
-
-        this->ISBN = isbn;
-        this->quantity = quantity;
-        this->checkedOut = false;
+        this->isbn = isbn;
+        available = true;
     }
 
-    // Destructor
-    ~Book()
-    {
-    }
-
-    // Check Out
     void checkOut() override
     {
-        if (this->checkedOut)
+        if (!available)
         {
-            cout << "Book is already checked out!"
-                 << endl;
-
+            cout << "Book is already checked out.\n";
             return;
         }
 
-        if (this->quantity <= 0)
-        {
-            throw "No copy available!";
-        }
-
-        this->quantity--;
-
-        this->checkedOut = true;
-
+        available = false;
         setDueDate("30 Days");
-
-        cout << "Book Checked Out Successfully!"
-             << endl;
+        cout << "Book checked out successfully.\n";
     }
 
-    // Return
     void returnItem() override
     {
-        if (!this->checkedOut)
+        if (available)
         {
-            cout << "Book is not checked out!"
-                 << endl;
-
+            cout << "Book is already available.\n";
             return;
         }
 
-        this->quantity++;
-
-        this->checkedOut = false;
-
-        setDueDate("");
-
-        cout << "Book Returned Successfully!"
-             << endl;
+        available = true;
+        setDueDate("Not Set");
+        cout << "Book returned successfully.\n";
     }
 
-    // Display
-    void displayDetails() override
+    void displayDetails() const override
     {
-        cout << endl;
-        cout << "----- BOOK DETAILS -----" << endl;
-
-        cout << "Title : "
-             << getTitle() << endl;
-
-        cout << "Author : "
-             << getAuthor() << endl;
-
-        cout << "ISBN : "
-             << this->ISBN << endl;
-
-        cout << "Quantity : "
-             << this->quantity << endl;
-
-        cout << "Status : "
-             << (checkedOut ? "Checked Out" : "Available")
-             << endl;
-
-        if (!getDueDate().empty())
-        {
-            cout << "Due Date : "
-                 << getDueDate() << endl;
-        }
+        cout << "\nType       : Book\n";
+        cout << "Title      : " << getTitle() << endl;
+        cout << "Author     : " << getAuthor() << endl;
+        cout << "ISBN       : " << isbn << endl;
+        cout << "Due Date   : " << getDueDate() << endl;
+        cout << "Status     : " << (available ? "Available" : "Checked Out") << endl;
     }
 };
-
-// DVD
 
 class DVD : public LibraryItem
 {
 private:
     int duration;
-    bool checkedOut;
+    bool available;
 
 public:
-    // Constructor
-    DVD(
-        string title,
-        string author,
-        int duration)
-        : LibraryItem(title, author)
+    DVD(string title, string author, string dueDate, int duration)
+        : LibraryItem(title, author, dueDate)
     {
         if (duration <= 0)
-        {
-            throw "Invalid DVD Duration!";
-        }
+            throw invalid_argument("Duration must be greater than zero.");
 
         this->duration = duration;
-        this->checkedOut = false;
+        available = true;
     }
 
-    // Destructor
-    ~DVD()
-    {
-    }
-
-    // Check Out
     void checkOut() override
     {
-        if (this->checkedOut)
+        if (!available)
         {
-            cout << "DVD is already checked out!"
-                 << endl;
-
+            cout << "DVD is already checked out.\n";
             return;
         }
 
-        this->checkedOut = true;
-
+        available = false;
         setDueDate("15 Days");
-
-        cout << "DVD Checked Out Successfully!"
-             << endl;
+        cout << "DVD checked out successfully.\n";
     }
 
-    // Return
     void returnItem() override
     {
-        if (!this->checkedOut)
+        if (available)
         {
-            cout << "DVD is not checked out!"
-                 << endl;
-
+            cout << "DVD is already available.\n";
             return;
         }
 
-        this->checkedOut = false;
-
-        setDueDate("");
-
-        cout << "DVD Returned Successfully!"
-             << endl;
+        available = true;
+        setDueDate("Not Set");
+        cout << "DVD returned successfully.\n";
     }
 
-    // Display
-    void displayDetails() override
+    void displayDetails() const override
     {
-        cout << endl;
-        cout << "----- DVD DETAILS -----" << endl;
-
-        cout << "Title : "
-             << getTitle() << endl;
-
-        cout << "Director : "
-             << getAuthor() << endl;
-
-        cout << "Duration : "
-             << this->duration << " Minutes"
-             << endl;
-
-        cout << "Status : "
-             << (checkedOut ? "Checked Out" : "Available")
-             << endl;
-
-        if (!getDueDate().empty())
-        {
-            cout << "Due Date : "
-                 << getDueDate() << endl;
-        }
+        cout << "\nType       : DVD\n";
+        cout << "Title      : " << getTitle() << endl;
+        cout << "Author     : " << getAuthor() << endl;
+        cout << "Duration   : " << duration << " minutes" << endl;
+        cout << "Due Date   : " << getDueDate() << endl;
+        cout << "Status     : " << (available ? "Available" : "Checked Out") << endl;
     }
 };
-
-// Magazine
 
 class Magazine : public LibraryItem
 {
 private:
     int issueNumber;
-    bool checkedOut;
+    bool available;
 
 public:
-    // Constructor
-    Magazine(
-        string title,
-        string author,
-        int issueNumber)
-        : LibraryItem(title, author)
+    Magazine(string title, string author, string dueDate, int issueNumber)
+        : LibraryItem(title, author, dueDate)
     {
         if (issueNumber <= 0)
-        {
-            throw "Invalid Issue Number!";
-        }
+            throw invalid_argument("Issue number must be greater than zero.");
 
         this->issueNumber = issueNumber;
-        this->checkedOut = false;
+        available = true;
     }
 
-    // Destructor
-    ~Magazine()
-    {
-    }
-
-    // Check Out
     void checkOut() override
     {
-        if (this->checkedOut)
+        if (!available)
         {
-            cout << "Magazine is already checked out!"
-                 << endl;
-
+            cout << "Magazine is already checked out.\n";
             return;
         }
 
-        this->checkedOut = true;
-
+        available = false;
         setDueDate("7 Days");
-
-        cout << "Magazine Checked Out Successfully!"
-             << endl;
+        cout << "Magazine checked out successfully.\n";
     }
 
-    // Return
     void returnItem() override
     {
-        if (!this->checkedOut)
+        if (available)
         {
-            cout << "Magazine is not checked out!"
-                 << endl;
-
+            cout << "Magazine is already available.\n";
             return;
         }
 
-        this->checkedOut = false;
-
-        setDueDate("");
-
-        cout << "Magazine Returned Successfully!"
-             << endl;
+        available = true;
+        setDueDate("Not Set");
+        cout << "Magazine returned successfully.\n";
     }
 
-    // Display
-    void displayDetails() override
+    void displayDetails() const override
     {
-        cout << endl;
-        cout << "----- MAGAZINE DETAILS -----"
-             << endl;
-
-        cout << "Title : "
-             << getTitle() << endl;
-
-        cout << "Publisher : "
-             << getAuthor() << endl;
-
-        cout << "Issue Number : "
-             << this->issueNumber << endl;
-
-        cout << "Status : "
-             << (checkedOut ? "Checked Out" : "Available")
-             << endl;
-
-        if (!getDueDate().empty())
-        {
-            cout << "Due Date : "
-                 << getDueDate() << endl;
-        }
+        cout << "\nType         : Magazine\n";
+        cout << "Title        : " << getTitle() << endl;
+        cout << "Author       : " << getAuthor() << endl;
+        cout << "Issue Number : " << issueNumber << endl;
+        cout << "Due Date     : " << getDueDate() << endl;
+        cout << "Status       : " << (available ? "Available" : "Checked Out") << endl;
     }
 };
 
-// Main
+int searchItem(LibraryItem* libraryItems[], int itemCount, string title)
+{
+    for (int i = 0; i < itemCount; i++)
+    {
+        if (libraryItems[i]->getTitle() == title)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
 
 int main()
 {
-    LibraryItem *libraryItems[100];
+    LibraryItem* libraryItems[MAX_ITEMS];
 
     int itemCount = 0;
+    int choice;
 
-    bool isRunning = true;
-
-    while (isRunning)
+    for (int i = 0; i < MAX_ITEMS; i++)
     {
-        int input;
+        libraryItems[i] = nullptr;
+    }
 
-        cout << endl;
-        cout << "====================================" << endl;
-        cout << "     LIBRARY MANAGEMENT SYSTEM" << endl;
-        cout << "====================================" << endl;
-
-        cout << "1. Add Book" << endl;
-        cout << "2. Add DVD" << endl;
-        cout << "3. Add Magazine" << endl;
-        cout << "4. View All Items" << endl;
-        cout << "5. Search Item" << endl;
-        cout << "6. Check Out Item" << endl;
-        cout << "7. Return Item" << endl;
-        cout << "8. Exit" << endl;
-
-        cout << endl;
-        cout << "Enter your input : ";
-        cin >> input;
+    do
+    {
+        cout << "\n====================================\n";
+        cout << "     LIBRARY MANAGEMENT SYSTEM\n";
+        cout << "====================================\n";
+        cout << "1. Add Book\n";
+        cout << "2. Add DVD\n";
+        cout << "3. Add Magazine\n";
+        cout << "4. Display All Items\n";
+        cout << "5. Search Item\n";
+        cout << "6. Check Out Item\n";
+        cout << "7. Return Item\n";
+        cout << "8. Remove Item\n";
+        cout << "9. Exit\n";
+        cout << "====================================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
 
         try
         {
-            switch (input)
+            if (choice == 1)
             {
+                if (itemCount >= MAX_ITEMS)
+                {
+                    throw runtime_error("Library catalog is full.");
+                }
 
-                // Add Book
+                string title, author, isbn;
 
-            case 1:
-            {
-                string title;
-                string author;
-                string isbn;
-                int quantity;
+                cout << "\nEnter Book Title: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
 
-                cout << "Enter Book Title : ";
-                cin >> title;
+                cout << "Enter Author Name: ";
+                getline(cin, author);
 
-                cout << "Enter Author : ";
-                cin >> author;
-
-                cout << "Enter ISBN : ";
-                cin >> isbn;
-
-                cout << "Enter Quantity : ";
-                cin >> quantity;
+                cout << "Enter ISBN: ";
+                getline(cin, isbn);
 
                 libraryItems[itemCount] =
-                    new Book(
-                        title,
-                        author,
-                        isbn,
-                        quantity);
+                    new Book(title, author, "Not Set", isbn);
 
                 itemCount++;
 
-                cout << "Book Added Successfully!"
-                     << endl;
-
-                break;
+                cout << "Book added successfully.\n";
             }
 
-                // Add DVD
-
-            case 2:
+            else if (choice == 2)
             {
-                string title;
-                string director;
+                if (itemCount >= MAX_ITEMS)
+                {
+                    throw runtime_error("Library catalog is full.");
+                }
+
+                string title, author;
                 int duration;
 
-                cout << "Enter DVD Title : ";
-                cin >> title;
+                cout << "\nEnter DVD Title: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
 
-                cout << "Enter Director : ";
-                cin >> director;
+                cout << "Enter Author/Director Name: ";
+                getline(cin, author);
 
-                cout << "Enter Duration : ";
+                cout << "Enter Duration in Minutes: ";
                 cin >> duration;
 
+                if (duration <= 0)
+                {
+                    throw invalid_argument("Duration cannot be negative or zero.");
+                }
+
                 libraryItems[itemCount] =
-                    new DVD(
-                        title,
-                        director,
-                        duration);
+                    new DVD(title, author, "Not Set", duration);
 
                 itemCount++;
 
-                cout << "DVD Added Successfully!"
-                     << endl;
-
-                break;
+                cout << "DVD added successfully.\n";
             }
 
-                // Add Magazine
-
-            case 3:
+            else if (choice == 3)
             {
-                string title;
-                string publisher;
+                if (itemCount >= MAX_ITEMS)
+                {
+                    throw runtime_error("Library catalog is full.");
+                }
+
+                string title, author;
                 int issueNumber;
 
-                cout << "Enter Magazine Title : ";
-                cin >> title;
+                cout << "\nEnter Magazine Title: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
 
-                cout << "Enter Publisher : ";
-                cin >> publisher;
+                cout << "Enter Author Name: ";
+                getline(cin, author);
 
-                cout << "Enter Issue Number : ";
+                cout << "Enter Issue Number: ";
                 cin >> issueNumber;
 
+                if (issueNumber <= 0)
+                {
+                    throw invalid_argument("Issue number must be positive.");
+                }
+
                 libraryItems[itemCount] =
-                    new Magazine(
-                        title,
-                        publisher,
-                        issueNumber);
+                    new Magazine(title, author, "Not Set", issueNumber);
 
                 itemCount++;
 
-                cout << "Magazine Added Successfully!"
-                     << endl;
-
-                break;
+                cout << "Magazine added successfully.\n";
             }
 
-                // View All
-
-            case 4:
+            else if (choice == 4)
             {
-                for (int i = 0; i < itemCount; i++)
+                if (itemCount == 0)
                 {
-                    libraryItems[i]->displayDetails();
-
-                    cout << "------------------------"
-                         << endl;
+                    cout << "\nNo items available in library.\n";
                 }
-
-                break;
-            }
-
-                // Search
-
-            case 5:
-            {
-                string searchTitle;
-                bool found = false;
-
-                cout << "Enter Title : ";
-                cin >> searchTitle;
-
-                for (int i = 0; i < itemCount; i++)
+                else
                 {
-                    if (libraryItems[i]->getTitle() == searchTitle)
+                    cout << "\n========== ALL LIBRARY ITEMS ==========\n";
+
+                    for (int i = 0; i < itemCount; i++)
                     {
+                        cout << "\nItem " << i + 1 << endl;
                         libraryItems[i]->displayDetails();
-
-                        found = true;
-
-                        break;
                     }
                 }
-
-                if (!found)
-                {
-                    cout << "Item Not Found!"
-                         << endl;
-                }
-
-                break;
             }
 
-                // Check Out
-
-            case 6:
+            else if (choice == 5)
             {
-                string searchTitle;
-                bool found = false;
+                string title;
 
-                cout << "Enter Title : ";
-                cin >> searchTitle;
+                cout << "\nEnter Title to Search: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
 
-                for (int i = 0; i < itemCount; i++)
+                int index = searchItem(libraryItems, itemCount, title);
+
+                if (index == -1)
                 {
-                    if (libraryItems[i]->getTitle() == searchTitle)
+                    cout << "Item not found.\n";
+                }
+                else
+                {
+                    cout << "\nItem found successfully.\n";
+                    libraryItems[index]->displayDetails();
+                }
+            }
+
+            else if (choice == 6)
+            {
+                string title;
+
+                cout << "\nEnter Title to Check Out: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
+
+                int index = searchItem(libraryItems, itemCount, title);
+
+                if (index == -1)
+                {
+                    cout << "Item not found.\n";
+                }
+                else
+                {
+                    libraryItems[index]->checkOut();
+                }
+            }
+
+            else if (choice == 7)
+            {
+                string title;
+
+                cout << "\nEnter Title to Return: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
+
+                int index = searchItem(libraryItems, itemCount, title);
+
+                if (index == -1)
+                {
+                    cout << "Item not found.\n";
+                }
+                else
+                {
+                    libraryItems[index]->returnItem();
+                }
+            }
+
+            else if (choice == 8)
+            {
+                string title;
+
+                cout << "\nEnter Title to Remove: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, title);
+
+                int index = searchItem(libraryItems, itemCount, title);
+
+                if (index == -1)
+                {
+                    cout << "Item not found.\n";
+                }
+                else
+                {
+                    delete libraryItems[index];
+
+                    for (int i = index; i < itemCount - 1; i++)
                     {
-                        libraryItems[i]->checkOut();
-
-                        found = true;
-
-                        break;
+                        libraryItems[i] = libraryItems[i + 1];
                     }
-                }
 
-                if (!found)
-                {
-                    cout << "Item Not Found!"
-                         << endl;
-                }
+                    libraryItems[itemCount - 1] = nullptr;
 
-                break;
+                    itemCount--;
+
+                    cout << "Item removed successfully.\n";
+                }
             }
 
-                // Return
-
-            case 7:
+            else if (choice == 9)
             {
-                string searchTitle;
-                bool found = false;
-
-                cout << "Enter Title : ";
-                cin >> searchTitle;
-
-                for (int i = 0; i < itemCount; i++)
-                {
-                    if (libraryItems[i]->getTitle() == searchTitle)
-                    {
-                        libraryItems[i]->returnItem();
-
-                        found = true;
-
-                        break;
-                    }
-                }
-
-                if (!found){
-                    cout << "Item Not Found!"
-                         << endl;
-                }
-
-                break;
+                cout << "\nThank you for using Library Management System.\n";
             }
-            case 8:
+
+            else
             {
-                isRunning = false;
-
-                cout << "Thank You For Visiting!"
-                     << endl;
-
-                break;
+                cout << "\nInvalid choice. Please try again.\n";
             }
-
-            default:
-            {
-                cout << "Invalid Input!" << endl;
-            }
-            }
-        }    
-        catch (const char *error)
-        {
-            cout << "Error : "
-                 << error << endl;
         }
-    catch (...)
+        catch (const exception& e)
         {
-            cout << "Something went wrong!"
-                 << endl;
+            cout << "\nError: " << e.what() << endl;
         }
-    }
+
+    } while (choice != 9);
 
     for (int i = 0; i < itemCount; i++)
     {
