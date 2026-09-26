@@ -39,40 +39,72 @@ function LeaveBalance() {
   };
 
   return (
-    <div>
-      <h1>My Leave Balance</h1>
+    <div className="container py-4">
 
-      {Object.entries(leaveLimits).map(
-        ([type, limit]) => {
-          const used = getUsedDays(type);
-          const remaining = Math.max(
-            limit - used,
-            0
-          );
+      {/* Header */}
+      <div className="mb-4">
+        <h1 className="fw-bold">My Leave Balance</h1>
+        <p className="text-muted">
+          Check your total, used and remaining leaves.
+        </p>
+      </div>
 
-          return (
-            <div key={type}>
+      {/* Leave Cards */}
+      <div className="row g-4">
 
-              <h2>{type}</h2>
+        {Object.entries(leaveLimits).map(
+          ([type, limit]) => {
+            const used = getUsedDays(type);
+            const remaining = Math.max(
+              limit - used,
+              0
+            );
 
-              <p>
-                Total: {limit}
-              </p>
+            return (
+              <div
+                className="col-md-6 col-lg-3"
+                key={type}
+              >
+                <div className="card shadow-sm h-100">
 
-              <p>
-                Used: {used}
-              </p>
+                  <div className="card-body">
 
-              <p>
-                Remaining: {remaining}
-              </p>
+                    <h3 className="fw-bold mb-3">
+                      {type}
+                    </h3>
 
-              <hr />
+                    <div className="mb-2">
+                      <span className="text-muted">
+                        Total
+                      </span>
+                      <h5>{limit}</h5>
+                    </div>
 
-            </div>
-          );
-        }
-      )}
+                    <div className="mb-2">
+                      <span className="text-muted">
+                        Used
+                      </span>
+                      <h5>{used}</h5>
+                    </div>
+
+                    <div>
+                      <span className="text-muted">
+                        Remaining
+                      </span>
+                      <h5 className="text-success">
+                        {remaining}
+                      </h5>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            );
+          }
+        )}
+
+      </div>
     </div>
   );
 }

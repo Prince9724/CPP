@@ -54,69 +54,139 @@ function ManagerDashboard() {
   };
 
   return (
-    <div>
-      <h1>Manager Dashboard</h1>
+    <div className="container py-4">
 
-      <h2>Leave Requests</h2>
+      {/* Header */}
+      <div className="mb-4">
+        <h1 className="fw-bold">
+          Manager Dashboard
+        </h1>
 
-      {leaves.length === 0 ? (
-        <p>No leave requests found.</p>
-      ) : (
-        leaves.map((leave) => (
-          <div key={leave._id}>
+        <p className="text-muted">
+          Manage employee leave requests
+        </p>
+      </div>
 
-            <h3>
-              {leave.employee?.name}
-            </h3>
+      {/* Leave Requests */}
+      <div className="card shadow-sm">
 
-            <p>
-              Email: {leave.employee?.email}
-            </p>
+        <div className="card-header">
+          <h4 className="mb-0">
+            Leave Requests
+          </h4>
+        </div>
 
-            <p>
-              Leave Type: {leave.leaveType}
-            </p>
+        <div className="card-body">
 
-            <p>
-              Start Date: {leave.startDate}
-            </p>
+          {leaves.length === 0 ? (
+            <div className="alert alert-info mb-0">
+              No leave requests found.
+            </div>
+          ) : (
+            <div className="row g-4">
 
-            <p>
-              End Date: {leave.endDate}
-            </p>
-
-            <p>
-              Total Days: {leave.totalDays}
-            </p>
-
-            <p>
-              Reason: {leave.reason}
-            </p>
-
-            <p>
-              Status: {leave.status}
-            </p>
-
-            {leave.status === "Pending" && (
-              <>
-                <button
-                  onClick={() => approveLeave(leave._id)}
+              {leaves.map((leave) => (
+                <div
+                  className="col-md-6"
+                  key={leave._id}
                 >
-                  Approve
-                </button>
 
-                <button
-                  onClick={() => rejectLeave(leave._id)}
-                >
-                  Reject
-                </button>
-              </>
-            )}
+                  <div className="card border h-100">
 
-            <hr />
-          </div>
-        ))
-      )}
+                    <div className="card-body">
+
+                      {/* Employee */}
+                      <h4 className="mb-1">
+                        {leave.employee?.name}
+                      </h4>
+
+                      <p className="text-muted">
+                        {leave.employee?.email}
+                      </p>
+
+                      <hr />
+
+                      <p className="mb-2">
+                        <strong>Leave Type:</strong>{" "}
+                        {leave.leaveType}
+                      </p>
+
+                      <p className="mb-2">
+                        <strong>Start Date:</strong>{" "}
+                        {leave.startDate}
+                      </p>
+
+                      <p className="mb-2">
+                        <strong>End Date:</strong>{" "}
+                        {leave.endDate}
+                      </p>
+
+                      <p className="mb-2">
+                        <strong>Total Days:</strong>{" "}
+                        {leave.totalDays}
+                      </p>
+
+                      <p className="mb-3">
+                        <strong>Reason:</strong>{" "}
+                        {leave.reason}
+                      </p>
+
+                      {/* Status */}
+                      <p>
+                        <strong>Status:</strong>{" "}
+
+                        <span
+                          className={`badge ${
+                            leave.status === "Approved"
+                              ? "text-bg-success"
+                              : leave.status === "Rejected"
+                              ? "text-bg-danger"
+                              : "text-bg-warning"
+                          }`}
+                        >
+                          {leave.status}
+                        </span>
+                      </p>
+
+                      {/* Buttons */}
+                      {leave.status === "Pending" && (
+                        <div className="d-flex gap-2 mt-3">
+
+                          <button
+                            className="btn btn-success"
+                            onClick={() =>
+                              approveLeave(leave._id)
+                            }
+                          >
+                            Approve
+                          </button>
+
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              rejectLeave(leave._id)
+                            }
+                          >
+                            Reject
+                          </button>
+
+                        </div>
+                      )}
+
+                    </div>
+
+                  </div>
+
+                </div>
+              ))}
+
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

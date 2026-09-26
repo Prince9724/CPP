@@ -22,44 +22,102 @@ function LeaveDetails() {
   }, []);
 
   if (!leave) {
-    return <p>Loading...</p>;
+    return (
+      <div className="container mt-5 text-center">
+        <h4>Loading...</h4>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>Leave Details</h1>
+    <div className="container py-4">
 
-      <p>
-        Employee: {leave.employee?.name}
-      </p>
+      <div className="row justify-content-center">
 
-      <p>
-        Email: {leave.employee?.email}
-      </p>
+        <div className="col-md-7">
 
-      <p>
-        Leave Type: {leave.leaveType}
-      </p>
+          <div className="card shadow-sm">
 
-      <p>
-        Start Date: {leave.startDate}
-      </p>
+            <div className="card-header">
+              <h3 className="mb-0">Leave Details</h3>
+            </div>
 
-      <p>
-        End Date: {leave.endDate}
-      </p>
+            <div className="card-body">
 
-      <p>
-        Total Days: {leave.totalDays}
-      </p>
+              <div className="mb-3">
+                <strong>Employee:</strong>
+                <p className="mb-0">
+                  {leave.employee?.name}
+                </p>
+              </div>
 
-      <p>
-        Reason: {leave.reason}
-      </p>
+              <div className="mb-3">
+                <strong>Email:</strong>
+                <p className="mb-0">
+                  {leave.employee?.email}
+                </p>
+              </div>
 
-      <p>
-        Status: {leave.status}
-      </p>
+              <div className="mb-3">
+                <strong>Leave Type:</strong>
+                <p className="mb-0">
+                  {leave.leaveType}
+                </p>
+              </div>
+
+              <div className="mb-3">
+                <strong>Start Date:</strong>
+                <p className="mb-0">
+                  {leave.startDate}
+                </p>
+              </div>
+
+              <div className="mb-3">
+                <strong>End Date:</strong>
+                <p className="mb-0">
+                  {leave.endDate}
+                </p>
+              </div>
+
+              <div className="mb-3">
+                <strong>Total Days:</strong>
+                <p className="mb-0">
+                  {leave.totalDays}
+                </p>
+              </div>
+
+              <div className="mb-3">
+                <strong>Reason:</strong>
+                <p className="mb-0">
+                  {leave.reason}
+                </p>
+              </div>
+
+              <div>
+                <strong>Status:</strong>
+                <div className="mt-1">
+                  <span
+                    className={`badge ${
+                      leave.status === "Approved"
+                        ? "text-bg-success"
+                        : leave.status === "Rejected"
+                        ? "text-bg-danger"
+                        : "text-bg-warning"
+                    }`}
+                  >
+                    {leave.status}
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

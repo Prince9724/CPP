@@ -67,145 +67,244 @@ function EmployeeDashboard() {
   };
 
   if (loading) {
-    return <h2>Loading dashboard...</h2>;
+    return (
+      <div className="container mt-5 text-center">
+        <h2>Loading dashboard...</h2>
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div className="container py-4">
 
       {/* Header */}
-
-      <h1>Employee Dashboard</h1>
-
-      <h2>
-        Welcome, {user?.name}
-      </h2>
-
-      <p>
-        {user?.email}
-      </p>
-
+      <div className="mb-4">
+        <h1 className="fw-bold">Employee Dashboard</h1>
+        <h4 className="mb-1">
+          Welcome, {user?.name}
+        </h4>
+        <p className="text-muted mb-0">
+          {user?.email}
+        </p>
+      </div>
 
       {/* Statistics */}
+      <div className="row g-3 mb-4">
 
-      <div>
-
-        <div>
-          <h3>Total Leave Balance</h3>
-          <h2>{totalLeaveBalance}</h2>
+        <div className="col-md-3">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h6 className="text-muted">
+                Total Leave Balance
+              </h6>
+              <h2 className="fw-bold">
+                {totalLeaveBalance}
+              </h2>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <h3>Used Leaves</h3>
-          <h2>{usedLeaves}</h2>
+        <div className="col-md-3">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h6 className="text-muted">
+                Used Leaves
+              </h6>
+              <h2 className="fw-bold">
+                {usedLeaves}
+              </h2>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <h3>Remaining Leaves</h3>
-          <h2>{remainingLeaves}</h2>
+        <div className="col-md-3">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h6 className="text-muted">
+                Remaining Leaves
+              </h6>
+              <h2 className="fw-bold">
+                {remainingLeaves}
+              </h2>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <h3>Pending Requests</h3>
-          <h2>{pendingLeaves.length}</h2>
+        <div className="col-md-3">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h6 className="text-muted">
+                Pending Requests
+              </h6>
+              <h2 className="fw-bold">
+                {pendingLeaves.length}
+              </h2>
+            </div>
+          </div>
         </div>
 
       </div>
-
 
       {/* Request Statistics */}
+      <div className="card shadow-sm mb-4">
+        <div className="card-body">
 
-      <div>
+          <h4 className="mb-4">
+            Leave Request Summary
+          </h4>
 
-        <h2>Leave Request Summary</h2>
+          <div className="row text-center">
 
-        <p>
-          Total Requests: {totalRequests}
-        </p>
+            <div className="col-md-3">
+              <h5>{totalRequests}</h5>
+              <p className="text-muted">
+                Total Requests
+              </p>
+            </div>
 
-        <p>
-          Approved: {approvedLeaves.length}
-        </p>
+            <div className="col-md-3">
+              <h5>{approvedLeaves.length}</h5>
+              <p className="text-success">
+                Approved
+              </p>
+            </div>
 
-        <p>
-          Pending: {pendingLeaves.length}
-        </p>
+            <div className="col-md-3">
+              <h5>{pendingLeaves.length}</h5>
+              <p className="text-warning">
+                Pending
+              </p>
+            </div>
 
-        <p>
-          Rejected: {rejectedLeaves.length}
-        </p>
+            <div className="col-md-3">
+              <h5>{rejectedLeaves.length}</h5>
+              <p className="text-danger">
+                Rejected
+              </p>
+            </div>
 
+          </div>
+
+        </div>
       </div>
-
 
       {/* Quick Actions */}
+      <div className="card shadow-sm mb-4">
+        <div className="card-body">
 
-      <div>
+          <h4 className="mb-3">
+            Quick Actions
+          </h4>
 
-        <h2>Quick Actions</h2>
+          <div className="d-flex gap-2 flex-wrap">
 
-        <Link to="/employee/apply-leave">
-          Apply Leave
-        </Link>
+            <Link
+              to="/employee/apply-leave"
+              className="btn btn-primary"
+            >
+              Apply Leave
+            </Link>
 
-        <br />
+            <Link
+              to="/employee/history"
+              className="btn btn-outline-primary"
+            >
+              View Leave History
+            </Link>
 
-        <Link to="/employee/history">
-          View Leave History
-        </Link>
+            <Link
+              to="/employee/balance"
+              className="btn btn-outline-secondary"
+            >
+              View Leave Balance
+            </Link>
 
-        <br />
+          </div>
 
-        <Link to="/employee/balance">
-          View Leave Balance
-        </Link>
-
+        </div>
       </div>
 
-
       {/* Recent Requests */}
+      <div className="card shadow-sm">
 
-      <div>
+        <div className="card-body">
 
-        <h2>Recent Leave Requests</h2>
+          <h4 className="mb-4">
+            Recent Leave Requests
+          </h4>
 
-        {recentLeaves.length === 0 ? (
-          <p>
-            You have not applied for any leave yet.
-          </p>
-        ) : (
-          recentLeaves.map((leave) => (
-            <div key={leave._id}>
+          {recentLeaves.length === 0 ? (
+            <p className="text-muted">
+              You have not applied for any leave yet.
+            </p>
+          ) : (
+            <div className="table-responsive">
 
-              <h3>
-                {leave.leaveType}
-              </h3>
+              <table className="table table-bordered table-hover align-middle">
 
-              <p>
-                From: {formatDate(leave.startDate)}
-              </p>
+                <thead className="table-light">
+                  <tr>
+                    <th>Leave Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Total Days</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
 
-              <p>
-                To: {formatDate(leave.endDate)}
-              </p>
+                <tbody>
 
-              <p>
-                Total Days: {leave.totalDays}
-              </p>
+                  {recentLeaves.map((leave) => (
+                    <tr key={leave._id}>
 
-              <p>
-                Reason: {leave.reason}
-              </p>
+                      <td>
+                        <strong>
+                          {leave.leaveType}
+                        </strong>
+                      </td>
 
-              <p>
-                Status: {leave.status}
-              </p>
+                      <td>
+                        {formatDate(leave.startDate)}
+                      </td>
 
-              <hr />
+                      <td>
+                        {formatDate(leave.endDate)}
+                      </td>
+
+                      <td>
+                        {leave.totalDays}
+                      </td>
+
+                      <td>
+                        {leave.reason}
+                      </td>
+
+                      <td>
+                        <span
+                          className={`badge ${
+                            leave.status === "Approved"
+                              ? "text-bg-success"
+                              : leave.status === "Rejected"
+                              ? "text-bg-danger"
+                              : "text-bg-warning"
+                          }`}
+                        >
+                          {leave.status}
+                        </span>
+                      </td>
+
+                    </tr>
+                  ))}
+
+                </tbody>
+
+              </table>
 
             </div>
-          ))
-        )}
+          )}
+
+        </div>
 
       </div>
 

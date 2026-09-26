@@ -5,13 +5,22 @@ import api from "../services/api";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await api.post("/auth/login", { email,password,});
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
+
       const user = response.data.user;
+
       localStorage.setItem("user", JSON.stringify(user));
+
       if (user.role === "manager") {
         navigate("/manager/dashboard");
       } else {
@@ -19,6 +28,7 @@ function Login() {
       }
     } catch (error) {
       console.log(error);
+
       alert(
         error.response?.data?.message || "Login failed"
       );
@@ -26,27 +36,88 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
+    <div className="container">
+      <div className="row justify-content-center align-items-center min-vh-100">
 
-      <div className="login-box">
+        <div className="col-md-5">
 
-        <h1>LeavePro</h1>
+          <div className="card shadow">
 
-        <p>Employee Leave Management System</p>
+            <div className="card-body p-4">
 
-        <form onSubmit={handleLogin}>
+              <h2 className="text-center mb-2">
+                LeavePro
+              </h2>
 
-          <input type="email"placeholder="Email"value={email}onChange={(e) => setEmail(e.target.value)}/>
+              <p className="text-center text-muted mb-4">
+                Employee Leave Management System
+              </p>
 
-          <input type="password"placeholder="Password"value={password}onChange={(e) => setPassword(e.target.value)}/>
-          <button type="submit">
-            Login
-          </button>
+              <form onSubmit={handleLogin}>
 
-        </form>
+                <div className="mb-3">
+                  <label className="form-label">
+                    Email
+                  </label>
+
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">
+                    Password
+                  </label>
+
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) =>
+                      setPassword(e.target.value)
+                    }
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                >
+                  Login
+                </button>
+
+              </form>
+
+              <div className="text-center mt-3">
+                <span className="text-muted">
+                  Don't have an account?
+                </span>
+
+                <button
+                  className="btn btn-link"
+                  onClick={() => navigate("/")}
+                >
+                  Register
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
-
     </div>
   );
 }
