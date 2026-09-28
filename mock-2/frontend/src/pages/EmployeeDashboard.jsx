@@ -7,7 +7,7 @@ function EmployeeDashboard() {
   const [loading, setLoading] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("user"));
-
+//leave 
   const getMyLeaves = async () => {
     try {
       const response = await api.get("/leaves/my");
